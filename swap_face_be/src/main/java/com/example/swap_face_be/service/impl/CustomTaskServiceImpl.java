@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -60,5 +61,21 @@ public class CustomTaskServiceImpl implements CustomTaskService {
     @Override
     public Object taskAll() {
         return customTaskDetailInfoMapper.selectList(null);
+    }
+
+    @Override
+    public Object selectTask(Integer taskId, Integer status, Integer limit) {
+        QueryWrapper<CustomTaskDetailInfo> queryWrapper = new QueryWrapper<>();
+        if (taskId != null) {
+            queryWrapper.eq("id", taskId);
+        }
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
+        List<CustomTaskDetailInfo> customTaskDetailInfoList = customTaskDetailInfoMapper.selectList(queryWrapper);
+        if (limit != null) {
+            customTaskDetailInfoList = customTaskDetailInfoList.subList(0, limit);
+        }
+        return customTaskDetailInfoList;
     }
 }

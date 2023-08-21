@@ -11,4 +11,6 @@ public interface CustomTaskService {
     Object updateCustomTask(long taskId, Map<String, Object> paramsMap, Map<String, Object> resultMap, int status, String modifier) throws Exception;
 
     Object taskAll();
+
+    Object selectTask(Integer taskId, Integer status, Integer limit);
 }

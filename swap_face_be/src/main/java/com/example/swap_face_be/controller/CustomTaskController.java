@@ -6,10 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +42,13 @@ public class CustomTaskController {
     @RequestMapping(value = "/all" , method = RequestMethod.GET)
     public Object customTaskList() {
         return customTaskService.taskAll();
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public Object taskSelect(@RequestParam(value = "taskId", required = false) Integer taskId,
+                             @RequestParam(value = "status", required = false) Integer status,
+                             @RequestParam(value = "limit", required = false) Integer limit) {
+        return customTaskService.selectTask(taskId, status, limit);
     }
 
 }
