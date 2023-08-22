@@ -22,6 +22,7 @@ class UpdateCustomTaskReq {
 }
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/custom/task")
 public class CustomTaskController {
 

@@ -11,6 +11,7 @@ import java.util.Map;
 public class SwapFaceTask extends CustomTask{
     private String sourceImagePath;
     private String targetImagePath;
+    private String topic;
 
     @Override
     public Map<String, Object> getParamsMap() {
@@ -19,6 +20,7 @@ public class SwapFaceTask extends CustomTask{
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("sourceImagePath", sourceImagePath);
         paramsMap.put("targetImagePath", targetImagePath);
+        paramsMap.put("topic", topic);
         return paramsMap;
     }
 }

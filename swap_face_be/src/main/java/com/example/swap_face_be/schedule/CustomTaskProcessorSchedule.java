@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,7 +34,7 @@ public class CustomTaskProcessorSchedule {
     private String SCRIPT_PATH = "/users/tjz/project/swap_face/swap_face_model/swapFaceTest.py";
     private String REMOTE_HOST = "http://81.68.187.103";
 
-//    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void swapFaceProcessor() throws IOException, URISyntaxException {
         CustomTaskDetailInfoMapper customTaskDetailInfoMapper = SpringUtil.getBean(CustomTaskDetailInfoMapper.class);
         assert customTaskDetailInfoMapper != null;
@@ -51,17 +52,24 @@ public class CustomTaskProcessorSchedule {
                 log.info(String.format("开始处理任务:%s", customTaskDetailInfo.getId()));
                 // 下载资源
                 String sourceImagePath = String.valueOf(taskInfoMap.get("sourceImagePath"));
-                String targetImagePath = String.valueOf(taskInfoMap.get("targetImagePath"));
+//                String targetImagePath = String.valueOf(taskInfoMap.get("targetImagePath"));
                 String sourceImageDownloadName = String.format("%s-%s.jpeg", "source", customTaskDetailInfo.getId());
                 String sourceDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", sourceImageDownloadName);
-                String targetImageDownloadName = String.format("%s-%s.jpeg", "target", customTaskDetailInfo.getId());
-                String targetDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", targetImageDownloadName);
+//                String targetImageDownloadName = String.format("%s-%s.jpeg", "target", customTaskDetailInfo.getId());
+//                String targetDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", targetImageDownloadName);
                 downloadFile(sourceImagePath, sourceDownloadPath);
-                downloadFile(targetImagePath, targetDownloadPath);
+//                downloadFile(targetImagePath, targetDownloadPath);
                 log.info("下载资源成功");
                 String resultImageName = String.format("%s-%s.jpeg", "result", customTaskDetailInfo.getId());
                 String resultImagePath = String.format("%s/%s/%s", WORK_DIR, "resource", resultImageName);
-                Process process = Runtime.getRuntime().exec("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py /users/tjz/project/swap_face/resource/source-10.jpeg /users/tjz/project/swap_face/resource/target-10.jpeg /users/tjz/project/swap_face/resource/result-10.jpeg");
+
+                // 随机选取一张图
+                File[] files = new File("/Users/tjz/project/swap_face/swap_face_model/小丑套图").listFiles();
+                assert files != null;
+                File choose = files[(int) (Math.random() * files.length)];
+
+                String cmd = String.format("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py %s %s %s", sourceDownloadPath, choose.getAbsolutePath(), resultImagePath);
+                Process process = Runtime.getRuntime().exec(cmd);
                 int exitCode = process.waitFor();
                 System.out.println("退出码:" + exitCode);
                 log.info("执行脚本成功");
@@ -98,7 +106,6 @@ public class CustomTaskProcessorSchedule {
         multiValueMap.add("file", new FileSystemResource(localFile));
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(multiValueMap, headers);
         Object resp = restTemplate.postForEntity(uri, requestEntity, Object.class);
-
     }
 
 
