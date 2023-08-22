@@ -10,7 +10,6 @@
       </template>
     </el-table-column>
    </el-table>
-  <el-button v-on:click="getTableData"></el-button>
   <template v-if="ifShowImage">
     <el-image :src="imgPath"></el-image>
   </template>
@@ -18,7 +17,6 @@
   
 <script>
 import axios from 'axios'
-import imgN from '/users/tjz/project/swap_face/resource/result-10.jpeg'
 export default {
   data() {
     return {
