@@ -7,6 +7,7 @@ import com.example.swap_face_be.util.SpringUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,9 +31,14 @@ import java.util.Objects;
 @Slf4j
 public class CustomTaskProcessorSchedule {
 
-    private String WORK_DIR = "/users/tjz/project/swap_face";
-    private String SCRIPT_PATH = "/users/tjz/project/swap_face/swap_face_model/swapFaceTest.py";
-    private String REMOTE_HOST = "http://81.68.187.103";
+    @Value("${schedule.swap-face.work-dir}")
+    private String WORK_DIR;
+    @Value("${schedule.swap-face.script-path}")
+    private String SCRIPT_PATH;
+    @Value("${schedule.swap-face.remote-host}")
+    private String REMOTE_HOST;
+    @Value("${schedule.swap-face.enable}")
+    private String SWAP_FACE_CRON;
 
     @Scheduled(cron = "0/10 * * * * ?")
     public void swapFaceProcessor() throws IOException, URISyntaxException {
@@ -48,17 +54,16 @@ public class CustomTaskProcessorSchedule {
             try {
                 customTaskDetailInfoMapper.updateById(customTaskDetailInfo); // todo 并发问题
                 Map<String, Object> taskInfoMap = customTaskDetailInfo.getTaskInfoMap();
+                // 添加处理器信息
                 taskInfoMap.put("processor", "tjz_work_mac");
+                customTaskDetailInfo.setTaskInfo(new ObjectMapper().writeValueAsString(taskInfoMap));
+                customTaskDetailInfoMapper.updateById(customTaskDetailInfo);
                 log.info(String.format("开始处理任务:%s", customTaskDetailInfo.getId()));
                 // 下载资源
                 String sourceImagePath = String.valueOf(taskInfoMap.get("sourceImagePath"));
-//                String targetImagePath = String.valueOf(taskInfoMap.get("targetImagePath"));
                 String sourceImageDownloadName = String.format("%s-%s.jpeg", "source", customTaskDetailInfo.getId());
                 String sourceDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", sourceImageDownloadName);
-//                String targetImageDownloadName = String.format("%s-%s.jpeg", "target", customTaskDetailInfo.getId());
-//                String targetDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", targetImageDownloadName);
                 downloadFile(sourceImagePath, sourceDownloadPath);
-//                downloadFile(targetImagePath, targetDownloadPath);
                 log.info("下载资源成功");
                 String resultImageName = String.format("%s-%s.jpeg", "result", customTaskDetailInfo.getId());
                 String resultImagePath = String.format("%s/%s/%s", WORK_DIR, "resource", resultImageName);
@@ -68,7 +73,8 @@ public class CustomTaskProcessorSchedule {
                 assert files != null;
                 File choose = files[(int) (Math.random() * files.length)];
 
-                String cmd = String.format("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py %s %s %s", sourceDownloadPath, choose.getAbsolutePath(), resultImagePath);
+                String cmd = String.format("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py %s %s %s",choose.getAbsolutePath(), sourceDownloadPath, resultImagePath);
+                System.out.println(cmd);
                 Process process = Runtime.getRuntime().exec(cmd);
                 int exitCode = process.waitFor();
                 System.out.println("退出码:" + exitCode);

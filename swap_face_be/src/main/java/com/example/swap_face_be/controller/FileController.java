@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class FileController {
 
-    private String FILE_PATH_PREFIX = "/root/taojunzhe/fs";
+    private String FILE_PATH_PREFIX = "/root/taojunzhe/swap_face/bootstrap/resource";
 
     // save path
     @RequestMapping(value = "/upload", method = RequestMethod.POST)

@@ -12,3 +12,11 @@ mybatis-plus:
   #  type-aliases-package: com.bytedance.dtechservice
   configuration:
     map-underscore-to-camel-case: true
+
+schedule:
+  enable: "${CRONJOB_ENABLE:0}"
+  swap-face:
+    work-dir: "${SWAP_FACE_WORK_DIR:/users/tjz/project/swap_face}"
+    script-path: "${SWAP_FACE_SCRIPT_PATH:/users/tjz/project/swap_face/swap_face_model/swapFaceTest.py}"
+    remote-host: "${SWAP_FACE_REMOTE_HOST:http://81.68.187.103}"
+    cron: "${SWAP_FACE_CRON:0/10 * * * * ?}"

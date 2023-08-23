@@ -1,45 +1,81 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="id" label="id" width="180" />
-    <el-table-column prop="taskType" label="taskType" width="180" />
-    <el-table-column prop="status" label="status" width="180" />
-    <el-table-column label="ops" width="180">
+  <el-table :data="tableData" style="width: 100%" height="500">
+    <el-table-column fixed prop="id" label="任务id" width="180" />
+    <el-table-column prop="taskType" label="任务类型" width="180" />
+    <el-table-column label="状态" width="180">
       <template #default="props">
-        {{ props.row["taskResultMap"]["resultImageName"] }}
-        <el-button @click="getImage(props.row['taskResultMap']['resultImageName'])">显示结果</el-button>
+        {{ parseStatus(props.row["status"]) }}
       </template>
     </el-table-column>
-   </el-table>
+    <el-table-column prop="creator" label="创建人" width="180" />
+    <el-table-column label="操作" width="180">
+      <template #default="props">
+        {{ props.row["taskResultMap"]["resultImageName"] }}
+        <el-button
+          v-if="props.row['status'] == 3"
+          @click="getImage(props.row['taskResultMap']['resultImageName'])"
+          >显示结果</el-button
+        >
+      </template>
+    </el-table-column>
+  </el-table>
   <template v-if="ifShowImage">
     <el-image :src="imgPath"></el-image>
   </template>
 </template>
   
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
       tableData: [],
       imgPath: "",
-      ifShowImage: false
+      ifShowImage: false,
     };
   },
   created() {
     axios({
-      url: "http://81.68.187.103/api/v1/custom/task/all",
-      method: "GET",
-    }).then((res) => {
-      console.log(res.data);
-      this.tableData = res.data;
-    });
+        url: "http://81.68.187.103/api/v1/custom/task/all",
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        this.tableData = res.data;
+      });
+  },
+  computed() {
+    this.getAllTasks();
   },
   methods: {
     getImage(imgName) {
-        this.imgPath = new URL("../../../../resource/" + imgName, import.meta.url).href
-        console.log(this.imgPath)
-        this.ifShowImage = true
-    }
-  }
+      this.imgPath = new URL(
+        "../../../../resource/" + imgName,
+        import.meta.url
+      ).href;
+      console.log(this.imgPath);
+      this.ifShowImage = true;
+    },
+    parseStatus(s) {
+      switch (s) {
+        case 1:
+          return "新建";
+        case 2:
+          return "运行中";
+        case 3:
+          return "成功";
+        case 4:
+          return "失败";
+      }
+    },
+    getAllTasks() {
+      axios({
+        url: "http://81.68.187.103/api/v1/custom/task/all",
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        this.tableData = res.data;
+      });
+    },
+  },
 };
 </script>
