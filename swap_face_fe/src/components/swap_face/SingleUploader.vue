@@ -46,7 +46,7 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
   axios
     .post("http://81.68.187.103/api/v1/custom/task/create", {
       type: "swap_face",
-      sourceImagePath: "/root/taojunzhe/fs/" + uploadFile.name,
+      sourceImagePath: "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
       topic: "xiaochou",
     })
     .then((res) => {
