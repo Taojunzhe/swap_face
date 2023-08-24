@@ -8,7 +8,7 @@
   <template #header>
     <span>{{ parseDialogTitle(dialogContentType) }}</span>
   </template>
-    <SingleUploader v-if="dialogContentType=='1'" />
+    <SingleUploader v-if="dialogContentType=='1'" :closeDialog="closeDialog" />
     <el-image v-if="dialogContentType=='2'" :src="imagePath" />
   </el-dialog>
   <el-row>
@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
+import { fa } from "element-plus/es/locale";
 import { ref } from "vue";
 import SingleUploader from "./SingleUploader.vue";
 import SwapFaceTaskList from "./SwapFaceTaskList.vue";
@@ -54,6 +56,12 @@ const showImage = (imgPath) => {
   dialogContentType.value='2';
   dialogVisible.value=true;
   console.log("dialogVisible")
+}
+
+const closeDialog: Function = () => {
+  console.log("closeDialog")
+  ElMessage("创建成功")
+  dialogVisible.value=false
 }
 
 </script>
