@@ -1,6 +1,6 @@
 <template>
   <el-table :data="tableData" style="width: 100%" height="500">
-    <el-table-column fixed prop="id" label="任务id" width="60" />
+    <el-table-column fixed prop="id" label="序号" width="60" />
     <el-table-column prop="taskType" label="任务类型" width="120" />
     <el-table-column label="状态" width="120">
       <template #default="props">
@@ -27,17 +27,29 @@ export default {
   props: ["showImage"],
   data() {
     return {
-      tableData: []
+      tableData: [],
     };
   },
   created() {
     axios({
-      url: "http://81.68.187.103/api/v1/custom/task/all",
-      method: "GET",
-    }).then((res) => {
-      console.log(res.data);
-      this.tableData = res.data;
-    });
+        url: "http://81.68.187.103/api/v1/custom/task/all",
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        this.tableData = res.data;
+      });
+    this.timer = setInterval(() => {
+      axios({
+        url: "http://81.68.187.103/api/v1/custom/task/all",
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        this.tableData = res.data;
+      });
+    }, 5000);
+  },
+  destroyed() {
+    clearInterval(this.timer);
   },
   computed() {
     this.getAllTasks();
