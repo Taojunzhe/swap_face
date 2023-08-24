@@ -19,41 +19,34 @@
       </template>
     </el-table-column>
   </el-table>
-  <template v-if="ifShowImage">
-    <el-image :src="imgPath"></el-image>
-  </template>
 </template>
   
 <script>
 import axios from "axios";
 export default {
+  props: ["showImage"],
   data() {
     return {
-      tableData: [],
-      imgPath: "",
-      ifShowImage: false,
+      tableData: []
     };
   },
   created() {
     axios({
-        url: "http://81.68.187.103/api/v1/custom/task/all",
-        method: "GET",
-      }).then((res) => {
-        console.log(res.data);
-        this.tableData = res.data;
-      });
+      url: "http://81.68.187.103/api/v1/custom/task/all",
+      method: "GET",
+    }).then((res) => {
+      console.log(res.data);
+      this.tableData = res.data;
+    });
   },
   computed() {
     this.getAllTasks();
   },
   methods: {
     getImage(imgName) {
-      this.imgPath = new URL(
-        "../../../../resource/" + imgName,
-        import.meta.url
-      ).href;
-      console.log(this.imgPath);
-      this.ifShowImage = true;
+      const pth = new URL("../../../../resource/" + imgName, import.meta.url)
+        .href;
+      this.showImage(pth);
     },
     parseStatus(s) {
       switch (s) {

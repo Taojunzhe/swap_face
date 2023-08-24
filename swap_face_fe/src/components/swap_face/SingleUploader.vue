@@ -1,26 +1,6 @@
 <template>
-  <el-upload
-    ref="upload"
-    class="upload-demo"
-    action="http://81.68.187.103/api/v1/file/upload"
-    :limit="1"
-    :on-exceed="handleExceed"
-    :auto-upload="false"
-    :on-success="successUpload"
-    list-type="picture"
-  >
-    <template #trigger>
-      <el-button type="primary">选择文件</el-button>
-    </template>
-    <el-button class="ml-3" type="success" @click="submitUpload">
-      创建任务
-    </el-button>
-    <template #tip>
-      <div class="el-upload__tip text-red">限制提交一个文件</div>
-    </template>
-  </el-upload>
-  <el-row>
-    <el-col>
+  <el-row justify="space-between" style="margin-bottom: 10pt">
+    <el-col :span="8">
       <el-select
         v-model="taskType"
         class="m-2"
@@ -35,7 +15,7 @@
         />
       </el-select>
     </el-col>
-    <el-col>
+    <el-col :span="8">
       <el-select
         v-model="taskTopic"
         class="m-2"
@@ -50,6 +30,27 @@
         />
       </el-select>
     </el-col>
+  </el-row>
+  <el-row>
+    <el-upload
+      ref="upload"
+      action="http://81.68.187.103/api/v1/file/upload"
+      :limit="1"
+      :on-exceed="handleExceed"
+      :auto-upload="false"
+      :on-success="successUpload"
+      list-type="picture"
+    >
+      <template #trigger>
+        <el-button type="primary" class="ml-3">选择文件</el-button>
+      </template>
+      <el-button class="ml-3" type="success" @click="submitUpload">
+        创建任务
+      </el-button>
+      <template #tip>
+        <div class="el-upload__tip text-red" style="color: red;">限制提交一个文件</div>
+      </template>
+    </el-upload>
   </el-row>
 </template>
   
@@ -104,3 +105,13 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
     });
 };
 </script>
+
+<style>
+.ml-3 {
+  margin-right: 10pt;
+}
+
+.text-red {
+  color: red;
+}
+</style>
