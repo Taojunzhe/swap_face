@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData" style="width: 100%" height="500">
-    <el-table-column fixed prop="id" label="任务id" width="180" />
-    <el-table-column prop="taskType" label="任务类型" width="180" />
-    <el-table-column label="状态" width="180">
+    <el-table-column fixed prop="id" label="任务id" width="30" />
+    <el-table-column prop="taskType" label="任务类型" width="120" />
+    <el-table-column label="状态" width="120">
       <template #default="props">
         {{ parseStatus(props.row["status"]) }}
       </template>
