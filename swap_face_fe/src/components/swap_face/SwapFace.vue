@@ -9,14 +9,13 @@
     <span>{{ parseDialogTitle(dialogContentType) }}</span>
   </template>
     <SingleUploader v-if="dialogContentType=='1'" />
-    <img v-if="dialogContentType=='2'" :src="imagePath" />
+    <el-image v-if="dialogContentType=='2'" :src="imagePath" />
   </el-dialog>
   <el-row>
     <el-col :span="8">
       <el-button type="primary" @click="dialogVisible = true;dialogContentType='1'">
         创建任务
       </el-button>
-      
     </el-col>
   </el-row>
   <el-row>
