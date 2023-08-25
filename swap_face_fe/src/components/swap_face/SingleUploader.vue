@@ -1,5 +1,8 @@
 <template>
-  <el-row justify="space-between" style="margin-bottom: 10pt">
+  <el-row style="margin-bottom: 10pt" type="flex" align="middle">
+    <el-col :span="4" style="color: red;">
+      <span>任务类型</span>
+    </el-col>
     <el-col :span="8">
       <el-select
         v-model="taskType"
@@ -14,6 +17,11 @@
           :value="item.value"
         />
       </el-select>
+    </el-col>
+  </el-row>
+  <el-row style="margin-bottom: 10pt" type="flex" align="middle">
+    <el-col :span="4" style="color: red;">
+      <span>任务主题</span>
     </el-col>
     <el-col :span="8">
       <el-select
@@ -48,7 +56,9 @@
         创建任务
       </el-button>
       <template #tip>
-        <div class="el-upload__tip text-red" style="color: red;">限制提交一个文件</div>
+        <div class="el-upload__tip text-red" style="color: red">
+          限制提交一个文件
+        </div>
       </template>
     </el-upload>
   </el-row>
@@ -61,17 +71,13 @@ import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import axios from "axios";
 
 const props = defineProps({
-    closeDialog: {
-        type: Function,
-        required: true
-    }
-})
+  closeDialog: {
+    type: Function,
+    required: true,
+  },
+});
 
 const upload = ref<UploadInstance>();
-
-const imageUrl = ref("");
-const taskType = ref("");
-const taskTopic = ref("");
 
 const taskTypeOptions = [
   {
@@ -86,6 +92,12 @@ const taskTopicOptions = [
     label: "小丑",
   },
 ];
+
+const imageUrl = ref("");
+const taskType = ref(taskTypeOptions[0]);
+const taskTopic = ref("");
+
+
 
 const handleExceed: UploadProps["onExceed"] = (files) => {
   upload.value!.clearFiles();
@@ -108,12 +120,11 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
       topic: taskTopic.value,
     })
     .then((res) => {
-      console.log(typeof(props.closeDialog))
+      console.log(typeof props.closeDialog);
       props.closeDialog();
       console.log(res);
     });
 };
-
 </script>
 
 <style>
