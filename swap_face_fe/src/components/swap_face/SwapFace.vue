@@ -3,7 +3,7 @@
 
   <el-dialog
     v-model="dialogVisible"
-    width="30%"
+    width="80%"
   >
   <template #header>
     <span>{{ parseDialogTitle(dialogContentType) }}</span>
