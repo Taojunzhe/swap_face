@@ -82,13 +82,13 @@ const upload = ref<UploadInstance>();
 const taskTypeOptions = [
   {
     value: "swap_face",
-    label: "换脸",
+    label: "AI大头贴",
   },
 ];
 
 const taskTopicOptions = [
   {
-    value: "xiaochou",
+    value: "dark_clown",
     label: "小丑",
   },
 ];
