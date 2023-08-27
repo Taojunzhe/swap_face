@@ -114,7 +114,7 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
   console.log(uploadFile.name);
   axios
     .post("http://81.68.187.103/api/v1/custom/task/create", {
-      type: taskType.value,
+      type: taskType.value.value,
       sourceImagePath:
         "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
       topic: taskTopic.value,
