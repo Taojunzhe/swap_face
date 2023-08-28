@@ -7,7 +7,7 @@
         {{ parseStatus(props.row["status"]) }}
       </template>
     </el-table-column>
-    <el-table-column prop="creator" label="创建人" width="180" />
+    <el-table-column prop="creator" label="创建人" width="120" />
     <el-table-column prop="ctime" label="创建时间" width="180"></el-table-column>
     <el-table-column label="操作" width="180">
       <template #default="props">
@@ -44,7 +44,6 @@ export default {
         url: "http://81.68.187.103/api/v1/custom/task/all",
         method: "GET",
       }).then((res) => {
-        console.log(res.data);
         this.tableData = res.data;
       });
     }, 5000);
