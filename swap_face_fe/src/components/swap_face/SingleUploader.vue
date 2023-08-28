@@ -1,9 +1,9 @@
 <template>
   <el-row style="margin-bottom: 10pt" type="flex" align="middle">
-    <el-col :span="4" style="color: red;">
+    <el-col style="color: red;" :xs="6">
       <span>任务类型</span>
     </el-col>
-    <el-col :span="8">
+    <el-col :xs="18">
       <el-select
         v-model="taskType"
         class="m-2"
@@ -20,10 +20,10 @@
     </el-col>
   </el-row>
   <el-row style="margin-bottom: 10pt" type="flex" align="middle">
-    <el-col :span="4" style="color: red;">
+    <el-col :xs="6" style="color: red;">
       <span>任务主题</span>
     </el-col>
-    <el-col :span="8">
+    <el-col :xs="18">
       <el-select
         v-model="taskTopic"
         class="m-2"
@@ -89,7 +89,7 @@ const taskTypeOptions = [
 const taskTopicOptions = [
   {
     value: "dark_clown",
-    label: "小丑",
+    label: "黑暗小丑风",
   },
 ];
 
