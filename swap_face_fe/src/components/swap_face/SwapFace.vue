@@ -79,7 +79,6 @@ const timer = setInterval(() => {
         url: "http://81.68.187.103/api/v1/taskProcessor/access",
         method: "GET",
       }).then((res) => {
-        console.log(res.data);
         accessProcessorCnt.value = res.data.cnt;
       });
     }, 1000);
