@@ -91,6 +91,14 @@ const taskTopicOptions = [
     value: "dark_clown",
     label: "黑暗小丑风",
   },
+  {
+    value: "cert_photo",
+    label: "证件照",
+  },
+  {
+    value: "job_photo",
+    label: "职业照",
+  }
 ];
 
 const imageUrl = ref("");
