@@ -1,6 +1,6 @@
 <template>
   <el-row style="margin-bottom: 10pt" type="flex" align="middle">
-    <el-col style="color: red;" :xs="6">
+    <el-col style="color: red" :xs="6">
       <span>任务类型</span>
     </el-col>
     <el-col :xs="18">
@@ -20,7 +20,7 @@
     </el-col>
   </el-row>
   <el-row style="margin-bottom: 10pt" type="flex" align="middle">
-    <el-col :xs="6" style="color: red;">
+    <el-col :xs="6" style="color: red">
       <span>任务主题</span>
     </el-col>
     <el-col :xs="18">
@@ -63,8 +63,8 @@
     </el-upload>
   </el-row>
 </template>
-  
-<script setup lang="ts">
+    
+  <script setup lang="ts">
 import { ref } from "vue";
 import { genFileId } from "element-plus";
 import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
@@ -98,14 +98,12 @@ const taskTopicOptions = [
   {
     value: "job_photo",
     label: "职业照",
-  }
+  },
 ];
 
 const imageUrl = ref("");
 const taskType = ref(taskTypeOptions[0]);
 const taskTopic = ref("");
-
-
 
 const handleExceed: UploadProps["onExceed"] = (files) => {
   upload.value!.clearFiles();
@@ -134,8 +132,8 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
     });
 };
 </script>
-
-<style>
+  
+  <style>
 .ml-3 {
   margin-right: 10pt;
 }
