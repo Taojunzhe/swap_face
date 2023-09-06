@@ -39,7 +39,7 @@
     <template #header>
       <span> {{ parseDialogTitle(dialogContentType) }}</span>
     </template>
-    <el-image v-if="imgPath != ''" :src="imagePath" />
+    <el-image v-if="imgPath != ''" :src="imgPath" />
     <el-form v-if="dialogContentType == 1">
       <el-form-item label="选择喜欢的图片">
         <el-select v-model="chooseLikePic" placeholder="选择任务主题">
