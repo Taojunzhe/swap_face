@@ -3,12 +3,20 @@
     <el-form-item label="提示词">
       <el-input v-model="form.prompt" />
     </el-form-item>
-    <el-form-item label="底图">
+    <el-form-item label="原始图">
       <el-col :span="10">
         <el-input v-model="form.pictureName" disabled="true"/>
       </el-col>
       <el-col :span="4" style="margin-left: 15px">
-        <el-button type="success" @click="dialogVisible1=true" :disabled="form.pictureName!=''">上传图片</el-button>
+        <el-button type="success" @click="dialogVisible1=true;uploadType='pictureName'" :disabled="form.pictureName!=''">上传图片</el-button>
+      </el-col>
+    </el-form-item>
+    <el-form-item label="底图">
+      <el-col :span="10">
+        <el-input v-model="form.facePictureName" disabled="true"/>
+      </el-col>
+      <el-col :span="4" style="margin-left: 15px">
+        <el-button type="success" @click="dialogVisible1=true;uploadType='facePictureName'" :disabled="form.facePictureName!=''">上传图片</el-button>
       </el-col>
     </el-form-item>
     <!-- <el-form-item label="主题">
@@ -63,11 +71,13 @@ import axios from "axios";
 const form = reactive({
   prompt: "",
   pictureName: "",
+  facePictureName: ""
 //   topic: ""
 });
 
 const dialogVisible1 = ref(false);
 const upload = ref<UploadInstance>();
+const uploadType = ref('')
 
 const taskTopicOptions = [
   {
@@ -97,7 +107,11 @@ const submitUpload = () => {
 
 const successUpload = (response: any, uploadFile: UploadRawFile) => {
   console.log(uploadFile.name);
-  form.pictureName = uploadFile.name
+  if (uploadType.value == 'pictureName') {
+    form.pictureName = uploadFile.name
+  } else if (uploadType.value == 'facePictureName') {
+    form.facePictureName = uploadFile.name
+  }
   dialogVisible1.value=false
 };
 
@@ -108,6 +122,7 @@ const onSubmit = () => {
       type: "mid_journey",
       prompt: form.prompt,
       pictureUrl: "/root/taojunzhe/swap_face/bootstrap/resource/" + form.pictureName,
+      facePictureUrl: "/root/taojunzhe/swap_face/bootstrap/resource/" + form.facePictureName
     //   topic: form.topic,
     })
     .then((res) => {

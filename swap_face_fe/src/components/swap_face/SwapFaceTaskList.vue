@@ -25,10 +25,10 @@
           >显示结果</el-button
         >
         <el-button
-          v-if="props.row['status'] == 31"
+          v-if="props.row['status'] == 32"
           @click="
             handleProcess(props.row['id']);
-            showImage(props.row['taskResultMap']['resultImageNameStep1']);
+            showImage(props.row['taskResultMap']['resultImageName31']);
           "
           >处理</el-button
         >
@@ -128,6 +128,8 @@ const parseStatus = (status) => {
   switch (status) {
     case 1:
       return "新建";
+    case 13:
+      return "选图换脸创建";
     case 2:
       return "运行中";
     case 3:
@@ -135,7 +137,13 @@ const parseStatus = (status) => {
     case 4:
       return "失败";
     case 31:
-      return "一阶段完成";
+      return "md底图完成";
+    case 22:
+      return "md换脸中";
+    case 32:
+      return "md换脸完成";
+    case 23:
+      return "选图换脸中";
   }
 };
 const getAllTasks = () => {
@@ -163,7 +171,7 @@ const onSubmitChoosePic = (picId) => {
       paramsMap: {
         choosePic: chooseLikePic.value,
       },
-      status: 22,
+      status: 13,
     })
     .then((res) => {
       console.log(res.data);
