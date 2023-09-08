@@ -39,41 +39,50 @@ public class CustomTaskProcessorSchedule {
     private String REMOTE_HOST;
     @Value("${schedule.swap-face.enable}")
     private String SWAP_FACE_CRON;
+    @Value("${schedule.swap-face.processor-name}")
+    private String PROCESSOR_NAME;
 
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0/60 * * * * ?")
     public void swapFaceProcessor() throws IOException, URISyntaxException {
         CustomTaskDetailInfoMapper customTaskDetailInfoMapper = SpringUtil.getBean(CustomTaskDetailInfoMapper.class);
         assert customTaskDetailInfoMapper != null;
         // 拉新创建的任务
         QueryWrapper<CustomTaskDetailInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", 1);
-        CustomTaskDetailInfo customTaskDetailInfo = customTaskDetailInfoMapper.selectOne(queryWrapper);
-        if (customTaskDetailInfo != null) {
+        List<CustomTaskDetailInfo> customTaskDetailInfos = customTaskDetailInfoMapper.selectList(queryWrapper);
+        if (customTaskDetailInfos != null && customTaskDetailInfos.size() > 0) {
             // 先把状态置为2
+            CustomTaskDetailInfo customTaskDetailInfo = customTaskDetailInfos.get(0);
             customTaskDetailInfo.setStatus(2);
             try {
                 customTaskDetailInfoMapper.updateById(customTaskDetailInfo); // todo 并发问题
                 Map<String, Object> taskInfoMap = customTaskDetailInfo.getTaskInfoMap();
                 // 添加处理器信息
-                taskInfoMap.put("processor", "tjz_work_mac");
+                taskInfoMap.put("processor", PROCESSOR_NAME);
                 customTaskDetailInfo.setTaskInfo(new ObjectMapper().writeValueAsString(taskInfoMap));
                 customTaskDetailInfoMapper.updateById(customTaskDetailInfo);
                 log.info(String.format("开始处理任务:%s", customTaskDetailInfo.getId()));
                 // 下载资源
                 String sourceImagePath = String.valueOf(taskInfoMap.get("sourceImagePath"));
+                String targetImagePath = String.valueOf(taskInfoMap.get("targetImagePath"));
+
                 String sourceImageDownloadName = String.format("%s-%s.jpeg", "source", customTaskDetailInfo.getId());
                 String sourceDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", sourceImageDownloadName);
+                String targetImageDownloadName = String.format("%s-%s.jpeg", "target", customTaskDetailInfo.getId());
+                String targetDownloadPath = String.format("%s/%s/%s", WORK_DIR, "resource", targetImageDownloadName);
                 downloadFile(sourceImagePath, sourceDownloadPath);
+                downloadFile(targetImagePath, targetDownloadPath);
+
                 log.info("下载资源成功");
                 String resultImageName = String.format("%s-%s.jpeg", "result", customTaskDetailInfo.getId());
                 String resultImagePath = String.format("%s/%s/%s", WORK_DIR, "resource", resultImageName);
 
-                // 随机选取一张图
-                File[] files = new File("/Users/tjz/project/swap_face/swap_face_model/小丑套图").listFiles();
-                assert files != null;
-                File choose = files[(int) (Math.random() * files.length)];
+//                // 随机选取一张图
+//                File[] files = new File("/Users/tjz/project/swap_face/swap_face_model/小丑套图").listFiles();
+//                assert files != null;
+//                File choose = files[(int) (Math.random() * files.length)];
 
-                String cmd = String.format("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py %s %s %s",choose.getAbsolutePath(), sourceDownloadPath, resultImagePath);
+                String cmd = String.format("/usr/local/bin/python3.9 /users/tjz/project/swap_face/swap_face_model/swapFaceTest.py %s %s %s", targetDownloadPath, sourceDownloadPath, resultImagePath);
                 System.out.println(cmd);
                 Process process = Runtime.getRuntime().exec(cmd);
                 int exitCode = process.waitFor();

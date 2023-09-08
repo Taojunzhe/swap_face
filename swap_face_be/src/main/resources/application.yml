@@ -3,6 +3,8 @@ spring:
     url: jdbc:mysql://81.68.187.103:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: taojunzhe
     password: Jz3369622!
+    hikari:
+      max-lifetime: 900
   servlet:
     multipart:
       enabled: false
@@ -14,9 +16,10 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 schedule:
-  enable: "${CRONJOB_ENABLE:0}"
   swap-face:
     work-dir: "${SWAP_FACE_WORK_DIR:/users/tjz/project/swap_face}"
     script-path: "${SWAP_FACE_SCRIPT_PATH:/users/tjz/project/swap_face/swap_face_model/swapFaceTest.py}"
     remote-host: "${SWAP_FACE_REMOTE_HOST:http://81.68.187.103}"
     cron: "${SWAP_FACE_CRON:0/10 * * * * ?}"
+    enable: "${CRONJOB_ENABLE:0}"
+    processor-name: "${PROCESSOR_NAME:tjz_work_mac}"

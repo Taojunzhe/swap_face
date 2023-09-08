@@ -8,11 +8,17 @@ import java.util.Map;
 
 @Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
-@JsonSubTypes(@JsonSubTypes.Type(value = SwapFaceTask.class, name = "swap_face"))
+@JsonSubTypes(value = {
+        @JsonSubTypes.Type(value = SwapFaceTask.class, name = "swap_face"),
+        @JsonSubTypes.Type(value = MidJourneyTask.class, name = "mid_journey")
+})
 public abstract class CustomTask {
     private String type;
 
     public Map<String, Object> getParamsMap() {
         return null;
     }
+
+    public void checkParams() throws Exception { }
+
 }

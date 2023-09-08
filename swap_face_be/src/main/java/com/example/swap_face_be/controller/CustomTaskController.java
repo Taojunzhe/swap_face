@@ -30,8 +30,9 @@ public class CustomTaskController {
     CustomTaskService customTaskService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Object createCustomTask(@RequestBody CustomTask request) throws JsonProcessingException {
+    public Object createCustomTask(@RequestBody CustomTask request) throws Exception {
         String taskType = request.getType();
+        request.checkParams();
         return customTaskService.createCustomTask(taskType, request.getParamsMap(), "admin");
     }
 

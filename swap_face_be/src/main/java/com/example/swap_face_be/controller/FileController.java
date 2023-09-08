@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,6 +33,8 @@ public class FileController {
 //        assert ServletFileUpload.isMultipartContent(request);
         ServletFileUpload servletFileUpload = new ServletFileUpload();
         FileItemIterator fileItemIterator = servletFileUpload.getItemIterator(request);
+
+        List<String> respData = new ArrayList<>();
         while (fileItemIterator.hasNext()) {
 
             FileItemStream item = fileItemIterator.next();
@@ -52,11 +56,12 @@ public class FileController {
                 }
                 inputStream.close();
                 bufferedOutputStream.close();
-                resp.put(fieldName, name);
+                respData.add(name);
             }
         }
         // resp
         resp.put("code", 200);
+        resp.put("data", respData);
         return resp;
     }
 
