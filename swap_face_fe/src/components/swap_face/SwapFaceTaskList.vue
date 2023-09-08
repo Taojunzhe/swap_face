@@ -28,7 +28,7 @@
           v-if="props.row['status'] == 32"
           @click="
             handleProcess(props.row['id']);
-            showImage(props.row['taskResultMap']['resultImageName31']);
+            showImage(props.row['taskResultMap']['resultImageName32']);
           "
           >处理</el-button
         >
