@@ -132,6 +132,8 @@ const parseStatus = (status) => {
       return "选图换脸创建";
     case 2:
       return "运行中";
+    case 21:
+      return "md生成中";
     case 3:
       return "成功";
     case 4:
