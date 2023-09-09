@@ -134,18 +134,22 @@ const parseStatus = (status) => {
       return "运行中";
     case 21:
       return "md生成中";
-    case 3:
-      return "成功";
-    case 4:
-      return "失败";
-    case 31:
-      return "md底图完成";
     case 22:
       return "md换脸中";
+    case 23:
+      return "选图生成中";
+    case 24:
+      return "选图换脸中";
+    case 3:
+      return "成功";
+    case 31:
+      return "md底图完成";
     case 32:
       return "md换脸完成";
-    case 23:
-      return "选图换脸中";
+    case 33:
+      return "选图生成完成";
+    case 4:
+      return "失败";
   }
 };
 const getAllTasks = () => {
