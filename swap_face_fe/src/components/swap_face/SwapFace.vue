@@ -10,7 +10,7 @@
     <el-col :span="8">
       <el-button
         type="primary"
-        @click="dialogVisible = true;"
+        @click="dialogVisible = true;" :disabled="accessProcessorCnt==0"
       >
         创建任务
       </el-button>
