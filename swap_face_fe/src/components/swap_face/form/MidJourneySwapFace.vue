@@ -1,17 +1,7 @@
 <template>
-  <el-form :model="form" label-position="left" label-width="60px">
-    <el-form-item label="提示词">
-      <el-input v-model="form.prompt" />
-    </el-form-item>
-    <el-form-item label="原始图">
-      <el-col :span="10">
-        <el-input v-model="form.pictureName" disabled="true"/>
-      </el-col>
-      <el-col :span="4" style="margin-left: 15px">
-        <el-button type="success" @click="dialogVisible1=true;uploadType='pictureName'" :disabled="form.pictureName!=''">上传图片</el-button>
-      </el-col>
-    </el-form-item>
-    <el-form-item label="底图">
+
+  <el-form :model="form" label-position="left" label-width="80px">
+    <el-form-item label="人脸底图">
       <el-col :span="10">
         <el-input v-model="form.facePictureName" disabled="true"/>
       </el-col>
@@ -19,6 +9,7 @@
         <el-button type="success" @click="dialogVisible1=true;uploadType='facePictureName'" :disabled="form.facePictureName!=''">上传图片</el-button>
       </el-col>
     </el-form-item>
+  </el-form>
     <!-- <el-form-item label="主题">
       <el-select
         v-model="form.topic"
@@ -32,8 +23,38 @@
         />
       </el-select>
     </el-form-item> -->
+    <el-card v-for="(item, index) in form.conditionList" :key="index" style="margin-bottom: 20px;">
+      <template #header>
+        <el-row justify="space-between">
+          <el-col :span="4">{{ "序号:" + (index + 1) }}</el-col>
+          <el-col :span="4">
+            <el-button @click="form.conditionList.splice(index, 1)" type="danger">
+              删除
+            </el-button>
+          </el-col>
+        </el-row>
+      </template>
+      <el-row style="margin-bottom: 20px;">
+        <el-col :span="4" style="align-self: center;">
+          提示词
+        </el-col>
+        <el-col :span="20" style="align-self: center;">
+          <el-input disabled="true" :placeholder="item['prompt']"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4" style="align-self: center;">图片预览</el-col>
+        <el-col :span="20" style="align-self: center;">
+          <el-image :src="'http://81.68.187.103/resource/' + item['pictureName']" style="width: 200px;height: 200px;"></el-image>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-form inline>
     <el-form-item>
-        <el-button @click="onSubmit">提交任务</el-button>
+        <el-button @click="onSubmit" :disabled="form.conditionList.length == 0">提交任务</el-button>
+    </el-form-item>
+    <el-form-item>
+      <el-button @click="dialogVisible2=true;tempForm.prompt='';tempForm.pictureName=''" :disabled="form.conditionList.length >= 10">新增主题(上限10个)</el-button>
     </el-form-item>
   </el-form>
   <el-dialog v-model="dialogVisible1" width="90%" destroy-on-close>
@@ -59,6 +80,22 @@
       </template>
     </el-upload>
   </el-dialog>
+  <el-dialog v-model="dialogVisible2" destroy-on-close>
+    <el-form-item label="提示词">
+      <el-input v-model="tempForm.prompt"></el-input>
+    </el-form-item>
+    <el-form-item label="联想图">
+      <el-col :span="10">
+        <el-input v-model="tempForm.pictureName" disabled="true"/>
+      </el-col>
+      <el-col :span="4" style="margin-left: 15px">
+        <el-button type="success" @click="dialogVisible1=true;uploadType='pictureName'">上传图片</el-button>
+      </el-col>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="handleAddTask();dialogVisible2=false">确定</el-button>
+    </el-form-item>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -69,13 +106,17 @@ import axios from "axios";
 
 // do not use same name with ref
 const form = reactive({
-  prompt: "",
-  pictureName: "",
-  facePictureName: ""
-//   topic: ""
+  facePictureName: "",
+  conditionList: []
 });
 
+const tempForm = reactive({
+  prompt: "",
+    pictureName: ""
+})
+
 const dialogVisible1 = ref(false);
+const dialogVisible2 = ref(false)
 const upload = ref<UploadInstance>();
 const uploadType = ref('')
 
@@ -108,7 +149,7 @@ const submitUpload = () => {
 const successUpload = (response: any, uploadFile: UploadRawFile) => {
   console.log(uploadFile.name);
   if (uploadType.value == 'pictureName') {
-    form.pictureName = uploadFile.name
+    tempForm.pictureName = uploadFile.name
   } else if (uploadType.value == 'facePictureName') {
     form.facePictureName = uploadFile.name
   }
@@ -117,16 +158,30 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
 
 const onSubmit = () => {
   console.log("submit!");
-  axios
+  for (var f in form.conditionList) {
+    const tmpForm = form.conditionList[f]
+    axios
     .post("http://81.68.187.103/api/v1/custom/task/create", {
       type: "mid_journey",
-      prompt: form.prompt,
-      pictureUrl: "/root/taojunzhe/swap_face/bootstrap/resource/" + form.pictureName,
+      prompt: tmpForm["prompt"],
+      pictureUrl: "/root/taojunzhe/swap_face/bootstrap/resource/" + tmpForm["pictureName"],
       facePictureUrl: "/root/taojunzhe/swap_face/bootstrap/resource/" + form.facePictureName
     //   topic: form.topic,
     })
     .then((res) => {
       console.log(res);
     });
+  }
 };
+
+const handleAddTask = () => {
+  console.log(tempForm)
+  const tmp = {
+    "prompt": tempForm.prompt,
+    "pictureName": tempForm.pictureName
+  }
+  form.conditionList.push(tmp)
+  console.log(form.conditionList)
+}
+
 </script>

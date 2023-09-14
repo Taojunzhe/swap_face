@@ -24,23 +24,17 @@
           "
           >显示结果</el-button
         >
-        <el-button
-          v-if="props.row['status'] == 32"
-          @click="
-            handleProcess(props.row['id']);
-            showImage(props.row['taskResultMap']['resultImageName32']);
-          "
-          >处理</el-button
-        >
+        <el-button @click="handleProcess(props.row['id'])">查看详情</el-button>
       </template>
     </el-table-column>
   </el-table>
+
   <el-dialog v-model="dialogVisible" width="90%" destroy-on-close>
     <template #header>
       <span> {{ parseDialogTitle(dialogContentType) }}</span>
     </template>
     <el-image v-if="imgPath != ''" :src="imgPath" />
-    <el-form v-if="dialogContentType == 1">
+    <!-- <el-form v-if="dialogContentType == 1">
       <el-form-item label="选择喜欢的图片">
         <el-select v-model="chooseLikePic" placeholder="选择任务主题">
           <el-option
@@ -56,13 +50,16 @@
           >提交</el-button
         >
       </el-form-item>
-    </el-form>
+    </el-form> -->
+    <MidJourneySwapFace v-if="dialogContentType == 1" :task-id="chooseTaskId"/>
   </el-dialog>
 </template>
   
 <script setup lang="ts">
 import axios from "axios";
 import { onBeforeMount, reactive, ref } from "vue";
+import MidJourneySwapFace from "./detail/MidJourneySwapFace.vue";
+
 const tableData = ref([]);
 
 const dialogContentType = ref(0);
