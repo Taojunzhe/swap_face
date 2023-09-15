@@ -3,7 +3,7 @@
     <template #header>
       <span>创建任务</span>
     </template>
-    <TaskCreator :closeDialog="closeDialog" />
+    <TaskCreator @closeDialog="dialogVisible = false" />
     <!-- <el-image v-if="dialogContentType == '2'" :src="imagePath" /> -->
   </el-dialog>
   <el-row type="flex" align="center">

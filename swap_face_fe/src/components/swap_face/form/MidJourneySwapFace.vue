@@ -51,7 +51,7 @@
     </el-card>
     <el-form inline>
     <el-form-item>
-        <el-button @click="onSubmit" :disabled="form.conditionList.length == 0">提交任务</el-button>
+        <el-button @click="onSubmit();$emit('closeDialog')" :disabled="form.conditionList.length == 0">提交任务</el-button>
     </el-form-item>
     <el-form-item>
       <el-button @click="dialogVisible2=true;tempForm.prompt='';tempForm.pictureName=''" :disabled="form.conditionList.length >= 10">新增主题(上限10个)</el-button>

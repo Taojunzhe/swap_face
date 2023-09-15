@@ -17,7 +17,7 @@
       <template #default="props">
         {{ props.row["taskResultMap"]["resultImageName"] }}
         <el-button
-          v-if="props.row['status'] == 3"
+          v-if="props.row['status'] == 3 && props.row['task_type'] == 'swap_face'"
           @click="
             dialogContentType = 2;
             showImage(props.row['taskResultMap']['resultImageName']);
@@ -29,28 +29,11 @@
     </el-table-column>
   </el-table>
 
-  <el-dialog v-model="dialogVisible" width="90%" destroy-on-close>
+  <el-dialog v-model="dialogVisible" width="90%" destroy-on-close @closed="imgPath = ''">
     <template #header>
       <span> {{ parseDialogTitle(dialogContentType) }}</span>
     </template>
     <el-image v-if="imgPath != ''" :src="imgPath" />
-    <!-- <el-form v-if="dialogContentType == 1">
-      <el-form-item label="选择喜欢的图片">
-        <el-select v-model="chooseLikePic" placeholder="选择任务主题">
-          <el-option
-            v-for="item in likePicOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="onSubmitChoosePic(chooseLikePic.value)"
-          >提交</el-button
-        >
-      </el-form-item>
-    </el-form> -->
     <MidJourneySwapFace v-if="dialogContentType == 1" :task-id="chooseTaskId"/>
   </el-dialog>
 </template>
