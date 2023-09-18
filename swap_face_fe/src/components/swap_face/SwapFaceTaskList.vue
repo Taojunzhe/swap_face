@@ -17,7 +17,7 @@
       <template #default="props">
         {{ props.row["taskResultMap"]["resultImageName"] }}
         <el-button
-          v-if="props.row['status'] == 3 && props.row['task_type'] == 'swap_face'"
+          v-if="(props.row['status'] == 3)"
           @click="
             dialogContentType = 2;
             showImage(props.row['taskResultMap']['resultImageName']);
