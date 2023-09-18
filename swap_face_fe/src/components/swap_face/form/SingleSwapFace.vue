@@ -70,13 +70,6 @@ import { genFileId } from "element-plus";
 import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import axios from "axios";
 
-const props = defineProps({
-  closeDialog: {
-    type: Function,
-    required: true,
-  },
-});
-
 const upload = ref<UploadInstance>();
 
 const taskTypeOptions = [
