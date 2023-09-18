@@ -1,8 +1,5 @@
 <template>
   <el-container>
-    <el-header style="background-color: aqua;">
-
-    </el-header>
     <el-main>
       <swap-face />
     </el-main>
