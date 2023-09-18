@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import type { TabsPaneContext } from "element-plus";
-import SinglgSwapFace from "./form/SingleSwapFace.vue";
+import SingleSwapFace from "./form/SingleSwapFace.vue";
 import MidJourneySwapFace from "./form/MidJourneySwapFace.vue";
 
 const activeName = ref("midjourney");
