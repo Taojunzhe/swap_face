@@ -15,16 +15,15 @@
     ></el-table-column>
     <el-table-column label="操作" width="360">
       <template #default="props">
-        {{ props.row["taskResultMap"]["resultImageName"] }}
         <el-button
-          v-if="(props.row['status'] == 3)"
+          v-if="(props.row['status'] == 3) && (props.row['taskType'] == 'swap_face')"
           @click="
             dialogContentType = 2;
             showImage(props.row['taskResultMap']['resultImageName']);
           "
           >显示结果</el-button
         >
-        <el-button @click="handleProcess(props.row['id'])">查看详情</el-button>
+        <el-button v-if="(props.row['taskType'] != 'swap_face')" @click="handleProcess(props.row['id'])" >查看详情</el-button>
       </template>
     </el-table-column>
   </el-table>

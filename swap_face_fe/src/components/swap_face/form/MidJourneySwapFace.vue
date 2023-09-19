@@ -45,7 +45,7 @@
       <el-row>
         <el-col :span="4" style="align-self: center;">图片预览</el-col>
         <el-col :span="20" style="align-self: center;">
-          <el-image :src="'http://81.68.187.103/resource/' + item['pictureName']" style="width: 200px;height: 200px;"></el-image>
+          <el-image :src="'http://81.68.187.103/resource/' + item['pictureName']" :preview-src-list="['http://81.68.187.103/resource/' + item['pictureName']]" style="width: 200px;height: 200px;"></el-image>
         </el-col>
       </el-row>
     </el-card>

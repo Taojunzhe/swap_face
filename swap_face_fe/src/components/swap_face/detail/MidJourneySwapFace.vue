@@ -20,7 +20,7 @@
 
     <el-row>
       <el-col v-for="url in getAttachmentUrls(taskInfo)" :span="6">
-        <el-image :src="url" fit="fit" style="padding: 5px;"></el-image>
+        <el-image :src="url" :preview-src-list="[url]" fit="fit" style="padding: 5px;"></el-image>
       </el-col>
     </el-row>
 
