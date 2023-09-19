@@ -52,7 +52,7 @@
       <template #trigger>
         <el-button type="primary" class="ml-3">选择文件</el-button>
       </template>
-      <el-button class="ml-3" type="success" @click="submitUpload();$emit('closeDialog')">
+      <el-button class="ml-3" type="success" @click="submitUpload">
         创建任务
       </el-button>
       <template #tip>
@@ -70,6 +70,7 @@ import { genFileId } from "element-plus";
 import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import axios from "axios";
 
+const emit = defineEmits(['closeDialog'])
 const upload = ref<UploadInstance>();
 
 const taskTypeOptions = [
@@ -122,6 +123,7 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
       console.log(typeof props.closeDialog);
       props.closeDialog();
       console.log(res);
+      emit('closeDialog')
     });
 };
 </script>
