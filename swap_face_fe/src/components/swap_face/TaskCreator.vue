@@ -4,7 +4,7 @@
       ><mid-journey-swap-face @closeDialog="$emit('closeDialog')"
     /></el-tab-pane>
     <el-tab-pane label="主题换脸" name="swap_face"
-      ><single-swap-face
+      ><single-swap-face @closeDialog="$emit('closeDialog')"
     /></el-tab-pane>
   </el-tabs>
 </template>
