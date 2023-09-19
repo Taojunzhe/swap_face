@@ -120,8 +120,6 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
       topic: taskTopic.value,
     })
     .then((res) => {
-      console.log(typeof props.closeDialog);
-      props.closeDialog();
       console.log(res);
       emit('closeDialog')
     });
