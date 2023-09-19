@@ -52,7 +52,7 @@
       <template #trigger>
         <el-button type="primary" class="ml-3">选择文件</el-button>
       </template>
-      <el-button class="ml-3" type="success" @click="submitUpload">
+      <el-button class="ml-3" type="success" @click="submitUpload();$emit('closeDialog')">
         创建任务
       </el-button>
       <template #tip>
