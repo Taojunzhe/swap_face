@@ -35,7 +35,6 @@
 <script setup lang="ts">
 import axios from '../utils/axios'
 import { ElMessage } from "element-plus";
-import { fa } from "element-plus/es/locale";
 import { ref } from "vue";
 import TaskCreator from "../components/swap_face/TaskCreator.vue";
 import SwapFaceTaskList from "../components/swap_face/SwapFaceTaskList.vue";
