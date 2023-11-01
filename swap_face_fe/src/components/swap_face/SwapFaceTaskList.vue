@@ -102,11 +102,7 @@ onMounted(() => {
 
 const showImage = (imgName) => {
   dialogVisible.value = true;
-  imgPath.value = new URL(
-    "../../../../resource/" + imgName,
-    import.meta.url
-  ).href;
-  console.log(imgPath.value);
+  imgPath.value = "http://81.68.187.103/resource/" + imgName
 };
 
 const parseStatus = (status) => {
