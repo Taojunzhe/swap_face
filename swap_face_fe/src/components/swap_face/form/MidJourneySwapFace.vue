@@ -183,5 +183,4 @@ const handleAddTask = () => {
   form.conditionList.push(tmp)
   console.log(form.conditionList)
 }
-
 </script>

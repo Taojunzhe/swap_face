@@ -9,9 +9,9 @@
   </el-tabs>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
-import type { TabsPaneContext } from "element-plus";
+import { TabsPaneContext } from "element-plus";
 import SingleSwapFace from "./form/SingleSwapFace.vue";
 import MidJourneySwapFace from "./form/MidJourneySwapFace.vue";
 

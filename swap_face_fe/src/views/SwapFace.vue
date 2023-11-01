@@ -10,12 +10,12 @@
     <el-col :span="8">
       <el-button
         type="primary"
-        @click="dialogVisible = true;" :disabled="accessProcessorCnt==0"
+        @click="dialogVisible = true;" 
       >
         创建任务
       </el-button>
     </el-col>
-    <el-col :span="1" style="align-items: center; margin-right: 10px">
+    <!-- <el-col :span="1" style="align-items: center; margin-right: 10px">
       <el-icon
         :size="15"
         :color="accessProcessorCnt > 0 ? '#67C23A' : '#F56C6C'"
@@ -25,7 +25,7 @@
     </el-col>
     <el-col :span="10">
       <span>当前可用节点数: {{ accessProcessorCnt }}</span>
-    </el-col>
+    </el-col> -->
   </el-row>
   <el-row>
     <SwapFaceTaskList :showImage="showImage" />
@@ -33,12 +33,12 @@
 </template>
 
 <script setup lang="ts">
+import axios from '../utils/axios'
 import { ElMessage } from "element-plus";
 import { fa } from "element-plus/es/locale";
 import { ref } from "vue";
-import TaskCreator from "./TaskCreator.vue";
-import SwapFaceTaskList from "./SwapFaceTaskList.vue";
-import axios from "axios";
+import TaskCreator from "../components/swap_face/TaskCreator.vue";
+import SwapFaceTaskList from "../components/swap_face/SwapFaceTaskList.vue";
 
 const dialogVisible = ref(false);
 const imagePath = ref("");
@@ -70,10 +70,7 @@ const closeDialog: Function = () => {
 };
 
 const timer = setInterval(() => {
-  axios({
-    url: "http://81.68.187.103/api/v1/taskProcessor/access",
-    method: "GET",
-  }).then((res) => {
+  axios.get("/taskProcessor/access").then((res) => {
     accessProcessorCnt.value = res.data.cnt;
   });
 }, 1000);
