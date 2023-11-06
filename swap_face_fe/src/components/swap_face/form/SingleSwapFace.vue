@@ -228,7 +228,9 @@ const successUpload = (response, uploadFile) => {
       sourceImagePath:
         "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
       topic: taskTopic.value,
-      
+      attrGender: createSwapFaceTaskForm.gender,
+      attrAge: createSwapFaceTaskForm.age,
+      attrColor: createSwapFaceTaskForm.color
     })
     .then((res) => {
       console.log(res);
