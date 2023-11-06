@@ -369,6 +369,9 @@ const handleAddTask = () => {
     prompt: tempForm.prompt,
     pictureName: tempForm.pictureName,
     topicId: tempForm.topicId,
+    attrGender: tempForm.attrGender,
+    attrAge: tempForm.attrAge,
+    attrColor: tempForm.attrColor
   };
   form.conditionList.push(tmp);
   console.log(form.conditionList);
