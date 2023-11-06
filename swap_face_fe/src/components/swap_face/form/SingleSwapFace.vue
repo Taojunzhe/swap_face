@@ -31,7 +31,7 @@
         size="large"
       >
         <el-option
-          v-for="item in taskTopicOptions"
+          v-for="item in state.taskTopicOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -62,16 +62,62 @@
       </template>
     </el-upload>
   </el-row>
+  <el-form v-model="createSwapFaceTaskForm">
+    <el-form-item>
+      <el-select
+        v-model="createSwapFaceTaskForm.gender"
+        class="m-2"
+        placeholder="性别特征"
+        size="large"
+      >
+        <el-option
+          v-for="item in state.taskGenderOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-select
+        v-model="createSwapFaceTaskForm.age"
+        class="m-2"
+        placeholder="年龄特征"
+        size="large"
+      >
+        <el-option
+          v-for="item in state.taskAgeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-select
+        v-model="createSwapFaceTaskForm.color"
+        class="m-2"
+        placeholder="颜色特征"
+        size="large"
+      >
+        <el-option
+          v-for="item in state.taskColorOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+  </el-form>
 </template>
     
-  <script setup lang="ts">
-import { ref } from "vue";
+<script setup>
+import { onMounted, reactive, ref } from "vue";
 import { genFileId } from "element-plus";
-import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
-import axios from "axios";
+import axios from "@/utils/axios";
 
 const emit = defineEmits(['closeDialog'])
-const upload = ref<UploadInstance>();
+const upload = ref();
 
 const taskTypeOptions = [
   {
@@ -80,37 +126,101 @@ const taskTypeOptions = [
   },
 ];
 
-const taskTopicOptions = [
-  {
-    value: "dark_clown",
-    label: "黑暗小丑风",
-  },
-  {
-    value: "cert_photo",
-    label: "证件照",
-  },
-  {
-    value: "job_photo",
-    label: "职业照",
-  },
-];
+const state = reactive({
+  taskTopicOptions: [],
+  taskColorOptions: [
+    {
+      value: "white",
+      label: "白"
+    },
+    {
+      value: "black",
+      label: "黑"
+    },
+    {
+      value: "blue",
+      label: "蓝"
+    },
+    {
+      value: "brown",
+      label: "棕"
+    },
+    {
+      value: "all",
+      label: "全部"
+    }
+  ],
+  taskGenderOptions: [
+    {
+      value: "male",
+      label: "男",
+    },
+    {
+      value: "female",
+      label: "女",
+    }
+  ],
+  taskAgeOptions: [
+    {
+      value: "-18",
+      label: "18岁以下",
+    },
+    {
+      value: "18-25",
+      label: "18-25岁",
+    },
+    {
+      value: "25-30",
+      label: "25-30岁"
+    },
+    {
+      value: "30-",
+      label: "30岁以上"
+    }
+  ]
+
+})
+
+const createSwapFaceTaskForm = ref({
+  gender: "",
+  age: "",
+  color: ""
+})
+
+onMounted(() => {
+  fetchAllTopic();
+})
+
+const fetchAllTopic = () => {
+  axios.get("/manager/swap_face/topic/all").then((res) => {
+    console.log(res)
+    for (let i in res) {
+      var op = {
+        value: res[i].enName,
+        label: res[i].cnName
+      }
+      console.log(op)
+      state.taskTopicOptions.push(op)
+    }
+  })
+}
 
 const imageUrl = ref("");
 const taskType = ref(taskTypeOptions[0]);
 const taskTopic = ref("");
 
-const handleExceed: UploadProps["onExceed"] = (files) => {
-  upload.value!.clearFiles();
-  const file = files[0] as UploadRawFile;
+const handleExceed = (files) => {
+  upload.value.clearFiles();
+  const file = files[0];
   file.uid = genFileId();
-  upload.value!.handleStart(file);
+  upload.value.handleStart(file);
 };
 
 const submitUpload = () => {
-  upload.value!.submit();
+  upload.value.submit();
 };
 
-const successUpload = (response: any, uploadFile: UploadRawFile) => {
+const successUpload = (response, uploadFile) => {
   console.log(uploadFile.name);
   axios
     .post("/custom/task/create", {
@@ -118,6 +228,7 @@ const successUpload = (response: any, uploadFile: UploadRawFile) => {
       sourceImagePath:
         "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
       topic: taskTopic.value,
+      
     })
     .then((res) => {
       console.log(res);
