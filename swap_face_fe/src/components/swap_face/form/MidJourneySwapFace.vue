@@ -46,12 +46,12 @@
       </el-row>
     </template>
     <el-row style="margin-bottom: 20px">
-      <el-col :span="4" style="align-self: center"> 提示词 </el-col>
+      <el-col :span="4" style="align-self: center"> 主题 </el-col>
       <el-col :span="20" style="align-self: center">
-        <el-input disabled="true" :placeholder="item['prompt']"></el-input>
+        <el-input disabled="true" :placeholder="item['topicName']"></el-input>
       </el-col>
     </el-row>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="4" style="align-self: center">图片预览</el-col>
       <el-col :span="20" style="align-self: center">
         <el-image
@@ -62,7 +62,7 @@
           style="width: 200px; height: 200px"
         ></el-image>
       </el-col>
-    </el-row>
+    </el-row> -->
   </el-card>
   <el-form inline>
     <el-form-item>
@@ -371,9 +371,21 @@ const handleAddTask = () => {
     topicId: tempForm.topicId,
     attrGender: tempForm.attrGender,
     attrAge: tempForm.attrAge,
-    attrColor: tempForm.attrColor
+    attrColor: tempForm.attrColor,
+    topicName: topicIdToName(tempForm.topicId)
   };
   form.conditionList.push(tmp);
   console.log(form.conditionList);
 };
+
+const topicIdToName = (idx) => {
+  console.log(state.taskTopicOptions)
+  for (var i in state.taskTopicOptions) {
+    console.log(i)
+    console.log(state.taskTopicOptions[i].value)
+    if (String(state.taskTopicOptions[i].value) == String(idx)) {
+      return state.taskTopicOptions[i].label
+    }
+  }
+}
 </script>
