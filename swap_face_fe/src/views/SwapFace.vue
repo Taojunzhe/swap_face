@@ -68,11 +68,11 @@ const closeDialog: Function = () => {
   dialogVisible.value = false;
 };
 
-const timer = setInterval(() => {
-  axios.get("/taskProcessor/access").then((res) => {
-    accessProcessorCnt.value = res.data.cnt;
-  });
-}, 1000);
+// const timer = setInterval(() => {
+//   axios.get("/taskProcessor/access").then((res) => {
+//     accessProcessorCnt.value = res.data.cnt;
+//   });
+// }, 1000);
 </script>
 
 <style scoped>
