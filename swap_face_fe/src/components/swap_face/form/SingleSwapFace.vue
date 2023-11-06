@@ -181,7 +181,7 @@ const state = reactive({
 
 })
 
-const createSwapFaceTaskForm = ref({
+const createSwapFaceTaskForm = reactive({
   gender: "",
   age: "",
   color: ""
