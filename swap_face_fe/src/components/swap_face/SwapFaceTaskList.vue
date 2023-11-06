@@ -17,19 +17,19 @@
       <template #default="props">
         <el-button
           v-if="
-            props.row['status'] == 3 && props.row['taskType'] == 'swap_face'
+            props.row['status'] == 3
           "
           @click="
             dialogContentType = 2;
-            showImage(props.row['taskResultMap']['resultImageName']);
+            showResult(props.row['id']);
           "
           >显示结果</el-button
         >
-        <el-button
+        <!-- <el-button
           v-if="props.row['taskType'] != 'swap_face'"
           @click="handleProcess(props.row['id'])"
           >查看详情</el-button
-        >
+        > -->
       </template>
     </el-table-column>
   </el-table>
@@ -38,18 +38,25 @@
     v-model="dialogVisible"
     width="90%"
     destroy-on-close
-    @closed="imgPath = ''"
+    @closed="state.resultImageList=[]"
   >
     <template #header>
-      <span> {{ parseDialogTitle(dialogContentType) }}</span>
+      <span>任务结果</span>
     </template>
-    <el-image v-if="imgPath != ''" :src="imgPath" />
-    <MidJourneySwapFace v-if="dialogContentType == 1" :task-id="chooseTaskId" />
+    <el-row>
+      {{ "共" + state.resultImageList.length + "张结果" }}
+    </el-row>
+    <el-row justify="space-between">
+      <el-col v-for="image in state.resultImageList" :span="4">
+        <el-image :src="genImageUrl(image)"></el-image>
+      </el-col>
+    </el-row>
+    <!-- <MidJourneySwapFace v-if="dialogContentType == 1" :task-id="chooseTaskId" /> -->
   </el-dialog>
 </template>
   
 <script setup>
-import axios from "../../utils/axios.js";
+import axios from "@/utils/axios.js";
 import { onBeforeMount, reactive, ref, getCurrentInstance, onMounted } from "vue";
 import MidJourneySwapFace from "./detail/MidJourneySwapFace.vue";
 const app = getCurrentInstance()
@@ -58,7 +65,21 @@ const { goTop } = app.appContext.config.globalProperties
 const state = reactive({
   loading: false,
   tableData: [], // 数据列表
+  resultImageList: []
 });
+
+const showResult = (idx) => {
+  axios.get("/custom/task/result", {
+    params: {
+      taskId: idx
+    }
+  }).then((res) => {
+    console.log(res)
+    state.resultImageList = res
+  }).then(() => {
+    dialogVisible.value = true
+  })
+}
 
 const dialogContentType = ref(0);
 const dialogVisible = ref(false);
@@ -81,9 +102,8 @@ onMounted(() => {
 //   getAllTasks();
 // }, 5000);
 
-const showImage = (imgName) => {
-  dialogVisible.value = true;
-  imgPath.value = "http://81.68.187.103/resource/" + imgName
+const genImageUrl = (imgName) => {
+  return "http://81.68.187.103/resource/" + imgName
 };
 
 const parseStatus = (status) => {

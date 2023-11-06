@@ -4,7 +4,7 @@
     {{ state.topicDetail }} -->
   <div>
     {{ "主题名称:" + state.topicDetail.cnName }}
-    <el-button @click="dialogVisible = true" type="primary">添加图片</el-button>
+    <el-button @click="handleOpenDialog()" type="primary">添加图片</el-button>
   </div>
 
   <div>{{ "底图总数:" + state.modelList.length }}</div>
@@ -15,20 +15,22 @@
       <el-table-column label="性别" prop="attrGender"></el-table-column>
       <el-table-column label="年龄" prop="attrAge"></el-table-column>
       <el-table-column label="颜色" prop="attrColor"></el-table-column>
+      <el-table-column v-if="state.topicDetail.taskType=='mid_journey'" label="提示词" prop="prompt"></el-table-column>
       <el-table-column label="预览">
         <template #default="props">
-          <el-image :src="genPictureUrl(props.row['imagePath'])"></el-image>
+          <el-image v-if="props.row['imagePath'] != null" :src="genPictureUrl(props.row['imagePath'])"></el-image>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template #default="props">
           <el-button type="primary" @click="getBaseModelDetail(props.row['id'])">编辑</el-button>
+          <el-button type="warning" @click="openDeleteMessage(props.row['id'])">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
 
-  <div class="demo-image__lazy">
+  <!-- <div class="demo-image__lazy">
     <el-image
       v-for="picture in state.modelList"
       :key="picture.id"
@@ -36,7 +38,84 @@
       @click="openDeleteMessage(picture.id)"
       lazy
     ></el-image>
-  </div>
+  </div> -->
+
+  <el-dialog v-model="dialogVisible3" destroy-on-close width="60%">
+    <el-form label-width="80px" label-position="right" class="demo-ruleForm">
+      <el-form-item label="底图">
+        <el-upload
+      ref="upload"
+      action="http://81.68.187.103/api/v1/file/upload"
+      :limit="1"
+      :on-exceed="handleExceed"
+      :auto-upload="false"
+      :on-success="successUpload2"
+      list-type="picture"
+    >
+      <template #trigger>
+        <el-button type="primary" class="ml-3">选择文件</el-button>
+      </template>
+      <el-button class="ml-3" type="success" @click="submitUpload">
+        上传
+      </el-button>
+      <template #tip>
+        <div class="el-upload__tip text-red" style="color: red">
+          限制提交一个文件
+        </div>
+      </template>
+    </el-upload>
+      </el-form-item>
+
+    
+      <el-form-item label="提示词">
+        <el-input v-model="createTopicBasicImageForm.prompt"></el-input>
+      </el-form-item>
+      <div>属性选择</div>
+      <el-form-item label="性别">
+        <el-select
+          v-model="createTopicBasicImageForm.gender"
+          placeholder="Select"
+          style="width: 480px"
+        >
+          <el-option
+            v-for="item in selectOptions.gender"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="false"  label="年龄">
+        <el-select
+          v-model="createTopicBasicImageForm.age"
+          placeholder="Select"
+          style="width: 480px"
+        >
+          <el-option
+            v-for="item in selectOptions.age"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          /> </el-select>
+        </el-form-item>
+        <el-form-item v-if="false"  label="颜色">
+        <el-select
+          v-model="createTopicBasicImageForm.color"
+          placeholder="Select"
+          style="width: 480px"
+        >
+          <el-option
+            v-for="item in selectOptions.color"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          /> </el-select>
+        </el-form-item>
+    </el-form>
+  </el-dialog>
+
+
+
   <el-dialog v-model="dialogVisible2" destroy-on-close width="60%">
     <el-form label-width="80px" label-position="right" class="demo-ruleForm">
       <div>属性选择</div>
@@ -100,7 +179,7 @@
         <el-button type="primary" class="ml-3">选择文件</el-button>
       </template>
       <el-button class="ml-3" type="success" @click="submitUpload">
-        创建任务
+        上传
       </el-button>
       <template #tip>
         <div class="el-upload__tip text-red" style="color: red">
@@ -162,7 +241,7 @@ import { ElMessage, genFileId, ElMessageBox } from "element-plus";
 import md5 from "js-md5";
 
 const openDeleteMessage = (id) => {
-  ElMessageBox.confirm("确认删除该图片", "Warning", {
+  ElMessageBox.confirm("确认删除该模板", "Warning", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
     type: "warning",
@@ -171,7 +250,8 @@ const openDeleteMessage = (id) => {
       axios
         .delete("/manager/swap_face/topic/base_model", {
           params: {
-            imageId: id,
+            taskType: state.topicDetail.taskType,
+            modelId: id,
           },
         })
         .then((res) => {
@@ -202,6 +282,7 @@ const state = reactive({
 });
 const dialogVisible = ref(false);
 const dialogVisible2 = ref(false);
+const dialogVisible3 = ref(false);
 
 onMounted(() => {
   fetchTopicDetail();
@@ -262,6 +343,15 @@ const getBaseModelDetail = (idx) => {
 
 const upload = ref();
 
+const handleOpenDialog = () => {
+  switch (state.topicDetail.taskType) {
+    case "single_swap_face":
+      dialogVisible.value = true
+    case "mid_journey":
+      dialogVisible3.value = true
+  }
+}
+
 const createTopicForm = ref({
   enName: "",
   cnName: "",
@@ -284,6 +374,7 @@ const createTopicBasicImageForm = reactive({
   gender: "",
   age: "",
   color: "",
+  prompt: ""
 });
 
 const updateTopicBasicImageForm = reactive({
@@ -358,14 +449,35 @@ const successUpload = (response, uploadFile) => {
   axios
     .post("/manager/swap_face/topic/base_model", {
       topicId: $route.query.id,
+      taskType: "single_swap_face",
       baseImagePath:
         "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
       attrGender: createTopicBasicImageForm.gender,
       attrAge: createTopicBasicImageForm.age,
+      attrColor: createTopicBasicImageForm.color,
     })
     .then((res) => {
       console.log(res);
-      emit("closeDialog");
+      dialogVisible.value = false;
+    });
+};
+
+const successUpload2 = (response, uploadFile) => {
+  console.log(uploadFile.name);
+  axios
+    .post("/manager/swap_face/topic/base_model", {
+      topicId: $route.query.id,
+      taskType: "mid_journey",
+      baseImagePath:
+        "/root/taojunzhe/swap_face/bootstrap/resource/" + uploadFile.name,
+      prompt: createTopicBasicImageForm.prompt,
+      attrGender: createTopicBasicImageForm.gender,
+      attrAge: createTopicBasicImageForm.age,
+      attrColor: createTopicBasicImageForm.color
+    })
+    .then((res) => {
+      console.log(res);
+      dialogVisible3.value = false
     });
 };
 

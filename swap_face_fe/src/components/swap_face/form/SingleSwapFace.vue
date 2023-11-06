@@ -116,7 +116,7 @@ import { onMounted, reactive, ref } from "vue";
 import { genFileId } from "element-plus";
 import axios from "@/utils/axios";
 
-const emit = defineEmits(['closeDialog'])
+const emit = defineEmits(["closeDialog"]);
 const upload = ref();
 
 const taskTypeOptions = [
@@ -131,24 +131,24 @@ const state = reactive({
   taskColorOptions: [
     {
       value: "white",
-      label: "白"
+      label: "白",
     },
     {
       value: "black",
-      label: "黑"
+      label: "黑",
     },
     {
       value: "blue",
-      label: "蓝"
+      label: "蓝",
     },
     {
       value: "brown",
-      label: "棕"
+      label: "棕",
     },
     {
       value: "all",
-      label: "全部"
-    }
+      label: "全部",
+    },
   ],
   taskGenderOptions: [
     {
@@ -158,7 +158,7 @@ const state = reactive({
     {
       value: "female",
       label: "女",
-    }
+    },
   ],
   taskAgeOptions: [
     {
@@ -171,39 +171,44 @@ const state = reactive({
     },
     {
       value: "25-30",
-      label: "25-30岁"
+      label: "25-30岁",
     },
     {
       value: "30-",
-      label: "30岁以上"
-    }
-  ]
-
-})
+      label: "30岁以上",
+    },
+  ],
+});
 
 const createSwapFaceTaskForm = reactive({
   gender: "",
   age: "",
-  color: ""
-})
+  color: "",
+});
 
 onMounted(() => {
   fetchAllTopic();
-})
+});
 
 const fetchAllTopic = () => {
-  axios.get("/manager/swap_face/topic/all").then((res) => {
-    console.log(res)
-    for (let i in res) {
-      var op = {
-        value: res[i].enName,
-        label: res[i].cnName
+  axios
+    .get("/manager/swap_face/topic/all", {
+      params: {
+        taskType: "single_swap_face",
+      },
+    })
+    .then((res) => {
+      console.log(res);
+      for (let i in res) {
+        var op = {
+          value: res[i].enName,
+          label: res[i].cnName,
+        };
+        console.log(op);
+        state.taskTopicOptions.push(op);
       }
-      console.log(op)
-      state.taskTopicOptions.push(op)
-    }
-  })
-}
+    });
+};
 
 const imageUrl = ref("");
 const taskType = ref(taskTypeOptions[0]);
@@ -230,14 +235,13 @@ const successUpload = (response, uploadFile) => {
       topic: taskTopic.value,
       attrGender: createSwapFaceTaskForm.gender,
       attrAge: createSwapFaceTaskForm.age,
-      attrColor: createSwapFaceTaskForm.color
+      attrColor: createSwapFaceTaskForm.color,
     })
     .then((res) => {
       console.log(res);
-      emit('closeDialog')
+      emit("closeDialog");
     });
 };
-
 </script>
   
   <style>
