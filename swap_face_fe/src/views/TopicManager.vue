@@ -34,6 +34,20 @@
       <el-form-item label="中文名称" prop="cnName">
         <el-input type="text" v-model="createTopicForm.cnName"></el-input>
       </el-form-item>
+      <el-form-item label="主题类型" prop="taskType">
+        <el-select
+          v-model="createTopicForm.taskType"
+          placeholder="Select"
+          style="width: 480px"
+        >
+          <el-option
+            v-for="item in selectOptions.taskType"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button @click="doCreateTopic()">创建</el-button>
       </el-form-item>
@@ -94,9 +108,23 @@ import md5 from "js-md5";
 const upload = ref<UploadInstance>();
 const $router = useRouter();
 const dialogVisible = ref(false);
+const selectOptions = {
+  taskType: [
+    {
+      value: "single_swap_face",
+      label: "基础换脸",
+    },
+    {
+      value: "mid_journey",
+      label: "MJ主题换脸",
+    }
+  ]
+}
+
 const createTopicForm = ref({
   enName: "",
   cnName: "",
+  taskType: ""
 });
 const data = reactive({
   topicList: [],
@@ -142,6 +170,7 @@ const doCreateTopic = () => {
     .post("/manager/swap_face/topic", {
       enName: createTopicForm.value.enName,
       cnName: createTopicForm.value.cnName,
+      taskType: createTopicForm.value.taskType
     })
     .then((res) => {
       dialogVisible.value = false;
