@@ -54,7 +54,7 @@ const getUserInfo = async () => {
 }
 // 退出登录
 const logout = () => {
-  axios.delete('/logout').then(() => {
+  axios.delete('/user/logout').then(() => {
     // 退出之后，将本地保存的 token  清理掉
     localRemove('token')
     // 回到登录页
